@@ -51,4 +51,8 @@ public class Horoscope {
         return horoscope;
     }
 
+    public String toString() {
+        return this.name;
+    }
+
 }
