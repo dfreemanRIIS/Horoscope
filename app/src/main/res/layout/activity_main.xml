@@ -14,6 +14,5 @@
 <ListView
 android:id="@+id/main_list"
 android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:entries="@array/options" />
+android:layout_height="wrap_content" />
     </RelativeLayout>
