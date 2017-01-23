@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,7 +141,7 @@ public class CategoryActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             TextView theeHoroscope = (TextView) findViewById(R.id.horoscope);
-            theeHoroscope.setText(s);
+            theeHoroscope.setText(donsParser(s));
             Log.i("json", s);
         }
     }
@@ -151,5 +155,16 @@ public class CategoryActivity extends AppCompatActivity {
 
         inputStream.close();
         return result;
+    }
+
+    public String donsParser(String input) {
+        String output = "";
+        try {
+            JSONObject obj = new JSONObject(input);
+            output = obj.getString("prediction");
+            return output;
+        } catch(JSONException e) {
+            return "bork";
+        }
     }
 }
