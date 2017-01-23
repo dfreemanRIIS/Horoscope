@@ -18,7 +18,6 @@ import java.net.URL;
 public class CategoryActivity extends AppCompatActivity {
 
     public static final String EXTRA_HOROSCOPENO = "horoscopeNo";
-    protected String nameThisIsMostLikelyBadPractice = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +31,6 @@ public class CategoryActivity extends AppCompatActivity {
         //Set name
         TextView name = (TextView) findViewById(R.id.name);
         name.setText(horoscope.getName());
-        //Set this for the URL later
-        //nameThisIsMostLikelyBadPractice = "http://a.knrz.co/horoscope-api/current/" + horoscope.getName();
 
         //OLD set description
         TextView description = (TextView) findViewById(R.id.desc);
@@ -47,13 +44,9 @@ public class CategoryActivity extends AppCompatActivity {
         TextView month = (TextView) findViewById(R.id.month);
         month.setText(horoscope.getMonth());
 
-        //OLD set horoscope
-        //TextView theeHoroscope = (TextView) findViewById(R.id.horoscope);
-        //theeHoroscope.setText(horoscope.getHoroscope());
-
         //Do the magic stuff
         checkNetworkConnection();
-        new HTTPAsyncTask().execute();
+        new HTTPAsyncTask(horoscope.getName().toLowerCase()).execute();
     }
 
     public boolean checkNetworkConnection() {
@@ -89,6 +82,18 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     private class HTTPAsyncTask extends AsyncTask<Void, Void, String> {
+        private String name;
+        private String urlString;
+
+        public HTTPAsyncTask(String name) {
+            this.name = name;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            urlString = "http://a.knrz.co/horoscope-api/current/" + name;
+        }
+
         @Override
         protected String doInBackground(Void... params) {
             // These two need to be declared outside the try/catch
@@ -100,10 +105,9 @@ public class CategoryActivity extends AppCompatActivity {
             String forecastJsonStr = null;
 
             try {
+                URL url = new URL(urlString);
 
-                URL url = new URL("http://a.knrz.co/horoscope-api/current/gemini");
-
-                // Create the request to OpenWeatherMap, and open the connection
+                // Create the request and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -112,15 +116,12 @@ public class CategoryActivity extends AppCompatActivity {
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
                     // buffer for debugging.
                     buffer.append(line + "\n");
                 }
@@ -155,7 +156,6 @@ public class CategoryActivity extends AppCompatActivity {
             super.onPostExecute(s);
             TextView theeHoroscope = (TextView) findViewById(R.id.horoscope);
             theeHoroscope.setText(s);
-            //tvWeatherJson.setText(s);
             Log.i("json", s);
         }
     }
