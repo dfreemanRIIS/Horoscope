@@ -65,22 +65,6 @@ public class CategoryActivity extends AppCompatActivity {
         return isConnected;
     }
 
-    private String HttpGet(String myUrl) throws IOException {
-        InputStream inputStream = null;
-        String result = "";
-
-        URL url = new URL(myUrl);
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-        conn.connect();
-        inputStream = conn.getInputStream();
-        if(inputStream != null) {
-            result = convertInputStreamToString(inputStream);
-        } else {
-            result = "Did not work!";
-        }
-        return result;
-    }
-
     private class HTTPAsyncTask extends AsyncTask<Void, Void, String> {
         private String name;
         private String urlString;
@@ -134,8 +118,6 @@ public class CategoryActivity extends AppCompatActivity {
                 return forecastJsonStr;
             } catch (IOException e) {
                 Log.e("PlaceholderFragment", "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
                 return null;
             } finally{
                 if (urlConnection != null) {
@@ -169,10 +151,5 @@ public class CategoryActivity extends AppCompatActivity {
 
         inputStream.close();
         return result;
-    }
-
-    protected void setError(int NOPE) {
-        TextView theeHoroscope = (TextView) findViewById(R.id.horoscope);
-        theeHoroscope.setText("Something failed NOPE" + NOPE);
     }
 }
