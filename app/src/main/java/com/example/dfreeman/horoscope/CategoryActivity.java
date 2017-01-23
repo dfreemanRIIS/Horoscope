@@ -32,10 +32,6 @@ public class CategoryActivity extends AppCompatActivity {
         int horoNo = (Integer) getIntent().getExtras().get(EXTRA_HOROSCOPENO);
         Horoscope horoscope = Horoscope.horoscopes[horoNo];
 
-        //Set name
-        TextView name = (TextView) findViewById(R.id.name);
-        name.setText(horoscope.getName());
-
         //OLD set description
         TextView description = (TextView) findViewById(R.id.desc);
         description.setText(horoscope.getDescription());
@@ -140,8 +136,15 @@ public class CategoryActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            //Set name
+            TextView name = (TextView) findViewById(R.id.name);
+            name.setText(donsParser("sign", s));
+
+            //Set Prediction
             TextView theeHoroscope = (TextView) findViewById(R.id.horoscope);
-            theeHoroscope.setText(donsParser(s));
+            theeHoroscope.setText(donsParser("prediction", s));
+
             Log.i("json", s);
         }
     }
@@ -157,11 +160,11 @@ public class CategoryActivity extends AppCompatActivity {
         return result;
     }
 
-    public String donsParser(String input) {
+    public String donsParser(String field, String input) {
         String output = "";
         try {
             JSONObject obj = new JSONObject(input);
-            output = obj.getString("prediction");
+            output = obj.getString(field);
             return output;
         } catch(JSONException e) {
             return "bork";
