@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,11 +78,8 @@ public class CategoryActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
@@ -111,7 +106,6 @@ public class CategoryActivity extends AppCompatActivity {
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
@@ -147,17 +141,6 @@ public class CategoryActivity extends AppCompatActivity {
 
             Log.i("json", s);
         }
-    }
-
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
     }
 
     public String donsParser(String field, String input) {
